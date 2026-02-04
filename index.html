@@ -138,17 +138,19 @@
           <iconify-icon icon="solar:magnifer-linear" class="text-xl"></iconify-icon>
         </div>
         <input id="movieInput" placeholder="Enter a movie you loved (e.g. Inception)..." class="w-full bg-transparent text-white text-base font-light placeholder-slate-500 px-4 py-3 outline-none" autocomplete="off">
+        
+        <!-- Desktop button -->
         <button onclick="getRecommendations()" class="hidden sm:flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-3 rounded-lg font-medium text-sm transition-all duration-200 shadow-lg shadow-indigo-500/20 active:scale-[0.98] hover:shadow-indigo-500/40">
           <span>Generate</span>
           <iconify-icon icon="solar:magic-stick-3-linear" class="text-lg"></iconify-icon>
         </button>
       </div>
       
-      <!-- Mobile Button -->
-      <button onclick="getRecommendations()" class="sm:hidden mt-4 w-full flex items-center justify-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium text-sm transition shadow-lg shadow-indigo-500/20 active:scale-95">
+      <!-- Mobile Button FIX: ensure it calls getRecommendations and container shows -->
+      <button onclick="getRecommendations(); document.getElementById('results-container').classList.remove('hidden');" class="sm:hidden mt-4 w-full flex items-center justify-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium text-sm transition shadow-lg shadow-indigo-500/20 active:scale-95">
         Get Recommendations <iconify-icon icon="solar:magic-stick-3-linear"></iconify-icon>
       </button>
-
+    
       <div class="mt-5 flex items-center justify-center gap-6 text-xs text-slate-400 font-medium opacity-90 drop-shadow-sm">
         <div class="flex items-center gap-1.5 hover:text-emerald-400 transition-colors cursor-default">
           <iconify-icon icon="solar:check-circle-linear" class="text-emerald-500 text-sm"></iconify-icon> No Login
@@ -342,4 +344,5 @@
       });
 
     }</script></body></html>
+
 
