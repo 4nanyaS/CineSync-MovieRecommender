@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineSync – AI Movie Recommendations</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Iconify -->
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+  <!-- Config -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            inter: ['Inter', 'sans-serif']
+          },
+          animation: {
+            'float': 'float 8s ease-in-out infinite',
+            'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-20px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #05060f; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #444; }
+    
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Staggered Entrance Animations */
+    .animate-enter {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: enter 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes enter {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body class="antialiased overflow-x-hidden selection:bg-indigo-500/30 selection:text-indigo-200 text-slate-300 font-inter bg-[#05060f]">
+
+  <!-- BACKGROUND & OVERLAYS -->
+  <div class="fixed inset-0 z-0 pointer-events-none">
+    <!-- Movie Poster Collage Background - High Visibility -->
+    <div class="absolute inset-0 bg-[url('https://assets.nflxext.com/ffe/siteui/vlv3/f841d4c7-10e1-40af-bcae-07a3f8dc141a/f6d7434e-d6de-4185-a6d4-c77a2d08737b/US-en-20220502-popsignuptwoweeks-perspective_alpha_website_medium.jpg')] bg-cover bg-center opacity-40"></div>
+    
+    <!-- Dark tint to ensure text is readable over posters -->
+    <div class="absolute inset-0 bg-[#05060f]/50"></div>
+
+    <!-- Top Gradient: Fades from solid background color to transparent -->
+    <div class="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[#05060f] via-[#05060f]/80 to-transparent"></div>
+    
+    <!-- Bottom Gradient: Fades from transparent to solid background color -->
+    <div class="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-[#05060f] via-[#05060f] to-transparent"></div>
+
+    <!-- Accent Glows (Subtle) -->
+    <div class="absolute -top-20 left-0 right-0 h-[500px] bg-indigo-900/10 blur-[120px] animate-pulse-slow mix-blend-screen"></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="relative z-50 flex items-center justify-between pt-6 px-6 md:px-12 max-w-7xl mx-auto animate-enter">
+    <div class="flex items-center gap-2 group cursor-pointer">
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:shadow-indigo-500/40 transition duration-500 group-hover:scale-105">
+        <iconify-icon icon="solar:clapperboard-edit-linear" class="text-white text-lg"></iconify-icon>
+      </div>
+      <div class="text-lg font-medium tracking-tight text-white">
+        CineSync
+      </div>
+    </div>
+    
+    <div class="hidden md:flex gap-8 text-sm font-medium text-slate-300/80">
+      <a href="#features" class="hover:text-white transition-colors duration-200">Features</a>
+      <a href="#how" class="hover:text-white transition-colors duration-200">How it works</a>
+      <a href="#about" class="hover:text-white transition-colors duration-200">About</a>
+    </div>
+
+    <button class="flex items-center gap-2 px-4 py-2 text-xs font-medium text-white rounded-full bg-white/10 hover:bg-white/20 border border-white/10 transition duration-200 backdrop-blur-md hover:scale-105 active:scale-95">
+      <span class="" style="">Try Demo</span>
+      <iconify-icon icon="solar:star-linear" class="text-yellow-400"></iconify-icon>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="text-center max-w-5xl z-10 mr-auto ml-auto pt-32 pr-6 pb-40 pl-6 relative">
+    
+    <!-- Badge -->
+    <div class="inline-flex animate-enter text-xs font-medium text-indigo-300 bg-indigo-500/10 border-indigo-500/20 border rounded-full mb-8 pt-1 pr-3 pb-1 pl-3 backdrop-blur-md gap-x-2 gap-y-2 items-center" style="animation-delay: 100ms;">Trusted by 50,000+ movie fans.<span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+      </span></div>
+
+    <h1 class="animate-enter sm:text-7xl text-5xl font-semibold text-white tracking-tight mb-6 drop-shadow-2xl" style="animation-delay: 200ms">
+      Discover movies you'll <br>
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400 inline-block mt-2">actually watch.</span>
+    </h1>
+
+    <p class="animate-enter max-w-2xl mx-auto text-lg text-slate-200 leading-relaxed font-light drop-shadow-md" style="animation-delay: 300ms;">
+      Stop scrolling, start watching. CineSync uses advanced machine learning to analyze your unique taste profile and curate hidden gems instantly.
+    </p>
+
+    <!-- INPUT AREA -->
+    <div class="animate-enter mt-12 max-w-2xl mx-auto relative group" style="animation-delay: 400ms;">
+      <!-- Glow effect behind input -->
+      <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-violet-500 to-indigo-500 rounded-2xl opacity-20 blur-lg group-hover:opacity-40 transition duration-700 group-focus-within:opacity-50 group-focus-within:blur-xl"></div>
+      
+      <div class="relative flex items-center bg-[#0a0b14]/90 backdrop-blur-xl border border-white/10 rounded-xl p-2 shadow-2xl transition-all duration-300 focus-within:border-indigo-500/50 focus-within:ring-1 focus-within:ring-indigo-500/50">
+        <div class="pl-4 text-slate-500 flex items-center">
+          <iconify-icon icon="solar:magnifer-linear" class="text-xl"></iconify-icon>
+        </div>
+        <input id="movieInput" placeholder="Enter a movie you loved (e.g. Inception)..." class="w-full bg-transparent text-white text-base font-light placeholder-slate-500 px-4 py-3 outline-none" autocomplete="off">
+        <button onclick="getRecommendations()" class="hidden sm:flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-3 rounded-lg font-medium text-sm transition-all duration-200 shadow-lg shadow-indigo-500/20 active:scale-[0.98] hover:shadow-indigo-500/40">
+          <span>Generate</span>
+          <iconify-icon icon="solar:magic-stick-3-linear" class="text-lg"></iconify-icon>
+        </button>
+      </div>
+      
+      <!-- Mobile Button -->
+      <button onclick="getRecommendations()" class="sm:hidden mt-4 w-full flex items-center justify-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium text-sm transition shadow-lg shadow-indigo-500/20 active:scale-95">
+        Get Recommendations <iconify-icon icon="solar:magic-stick-3-linear"></iconify-icon>
+      </button>
+
+      <div class="mt-5 flex items-center justify-center gap-6 text-xs text-slate-400 font-medium opacity-90 drop-shadow-sm">
+        <div class="flex items-center gap-1.5 hover:text-emerald-400 transition-colors cursor-default">
+          <iconify-icon icon="solar:check-circle-linear" class="text-emerald-500 text-sm"></iconify-icon> No Login
+        </div>
+        <div class="flex items-center gap-1.5 hover:text-amber-400 transition-colors cursor-default">
+          <iconify-icon icon="solar:bolt-linear" class="text-amber-500 text-sm"></iconify-icon> Instant Results
+        </div>
+        <div class="flex items-center gap-1.5 hover:text-blue-400 transition-colors cursor-default">
+          <iconify-icon icon="solar:shield-check-linear" class="text-blue-500 text-sm"></iconify-icon> Privacy First
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS SECTION -->
+    <div id="results-container" class="hidden mt-20 max-w-4xl mx-auto">
+      <div class="flex items-center justify-between mb-8 px-2 animate-enter">
+        <h2 class="text-2xl font-semibold text-white tracking-tight flex items-center gap-2">
+          <iconify-icon icon="solar:clapperboard-text-linear" class="text-indigo-400"></iconify-icon>
+          Curated For You
+        </h2>
+        <span class="text-xs text-slate-500 uppercase tracking-widest font-medium">Top Matches</span>
+      </div>
+      
+      <div id="results" class="grid sm:grid-cols-2 gap-4 text-left">
+        <!-- Results will be injected here -->
+      </div>
+    </div>
+
+  </section>
+
+  <!-- FEATURES GRID -->
+  <section id="features" class="relative z-10 py-24 px-6 border-t border-white/5 bg-[#05060f]">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16 animate-enter" style="animation-delay: 500ms;">
+        <h2 class="text-3xl font-semibold tracking-tight text-white mb-4">How it works</h2>
+        <p class="text-slate-400 max-w-xl mx-auto">Three simple steps to find your next obsession without the endless scrolling paralysis.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Card 1 -->
+        <div class="glass-panel p-8 rounded-2xl hover:bg-white/5 transition duration-500 group hover:-translate-y-2 animate-enter" style="animation-delay: 600ms;">
+          <div class="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition duration-300 group-hover:bg-indigo-500/20">
+            <iconify-icon icon="solar:keyboard-linear" class="text-indigo-400 text-2xl"></iconify-icon>
+          </div>
+          <h3 class="text-lg font-medium text-white mb-2">Input Your Taste</h3>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Simply type in a movie title you enjoyed. No complex surveys or rating histories required.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="glass-panel p-8 rounded-2xl hover:bg-white/5 transition duration-500 group hover:-translate-y-2 animate-enter" style="animation-delay: 700ms;">
+          <div class="w-12 h-12 bg-violet-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition duration-300 group-hover:bg-violet-500/20">
+            <iconify-icon icon="solar:cpu-linear" class="text-violet-400 text-2xl"></iconify-icon>
+          </div>
+          <h3 class="text-lg font-medium text-white mb-2">Deep Analysis</h3>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Our algorithm scans thousands of data points including genre, director style, and mood.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="glass-panel p-8 rounded-2xl hover:bg-white/5 transition duration-500 group hover:-translate-y-2 animate-enter" style="animation-delay: 800ms;">
+          <div class="w-12 h-12 bg-pink-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition duration-300 group-hover:bg-pink-500/20">
+            <iconify-icon icon="solar:play-circle-linear" class="text-pink-400 text-2xl"></iconify-icon>
+          </div>
+          <h3 class="text-lg font-medium text-white mb-2">Instant Watchlist</h3>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Get a curated list of recommendations that match the vibe of your input movie perfectly.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH STACK / ABOUT -->
+  <section id="about" class="relative z-10 py-24 px-6 border-t border-white/5">
+    <div class="max-w-4xl mx-auto bg-gradient-to-b from-white/5 to-transparent p-px rounded-3xl animate-enter" style="animation-delay: 900ms;">
+      <div class="bg-[#080912] rounded-3xl p-10 md:p-16 text-center relative overflow-hidden group">
+        <!-- Decor: Scanning Line Animation -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 transition duration-700 pointer-events-none">
+             <div class="w-full h-px bg-gradient-to-r from-transparent via-indigo-500 to-transparent absolute top-0 animate-[float_4s_ease-in-out_infinite]"></div>
+        </div>
+        
+        <iconify-icon icon="solar:code-2-linear" class="text-4xl text-slate-500 mx-auto mb-6 group-hover:text-indigo-400 transition duration-300"></iconify-icon>
+        
+        <h2 class="text-2xl font-semibold text-white mb-4">Built with Modern Tech</h2>
+        <p class="text-slate-400 mb-8 leading-relaxed max-w-xl mx-auto">
+          CineSync leverages the power of Python's data science libraries. The backend processes vector similarity using Flask, while the frontend delivers a seamless experience.
+        </p>
+
+        <div class="flex flex-wrap justify-center gap-3">
+          <span class="px-3 py-1 rounded-md bg-white/5 border border-white/10 text-xs text-slate-300 font-mono hover:bg-white/10 hover:border-indigo-500/30 transition cursor-default">Python</span>
+          <span class="px-3 py-1 rounded-md bg-white/5 border border-white/10 text-xs text-slate-300 font-mono hover:bg-white/10 hover:border-indigo-500/30 transition cursor-default">Flask</span>
+          <span class="px-3 py-1 rounded-md bg-white/5 border border-white/10 text-xs text-slate-300 font-mono hover:bg-white/10 hover:border-indigo-500/30 transition cursor-default">Tailwind</span>
+          <span class="px-3 py-1 rounded-md bg-white/5 border border-white/10 text-xs text-slate-300 font-mono hover:bg-white/10 hover:border-indigo-500/30 transition cursor-default">Pandas</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="relative z-10 py-12 text-center border-t border-white/5 text-slate-500 text-sm">
+    <div class="flex items-center justify-center gap-2 mb-4 opacity-50 hover:opacity-100 transition duration-300">
+      <iconify-icon icon="solar:github-circle-linear" class="text-lg"></iconify-icon>
+      <a href="#" class="hover:text-white transition">View Source</a>
+    </div>
+    <p>© 2026 CineSync Project. Designed for movie lovers.</p>
+  </footer>
+
+  <!-- LOGIC -->
+  <script>
+    async function getRecommendations() {
+      const movieInput = document.getElementById("movieInput");
+      const movie = movieInput.value.trim();
+      const resultsContainer = document.getElementById("results-container");
+      const results = document.getElementById("results");
+
+      if (!movie) {
+        movieInput.classList.add("placeholder-red-400", "animate-pulse");
+        setTimeout(() => movieInput.classList.remove("placeholder-red-400", "animate-pulse"), 1000);
+        return;
+      }
+
+      // Show container and loading state with animation
+      resultsContainer.classList.remove("hidden");
+      results.innerHTML = `
+        <div class="col-span-2 flex flex-col items-center justify-center py-12 text-slate-400 animate-enter">
+          <iconify-icon icon="solar:spinner-linear" class="text-3xl animate-spin text-indigo-500 mb-3"></iconify-icon>
+          <p class="text-sm font-medium">Analyzing "${movie}"...</p>
+        </div>
+      `;
+      
+      // Simulate API call
+      try {
+        const response = await fetch("http://127.0.0.1:5000/recommend", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ movie_name: movie })
+        });
+
+        if (!response.ok) throw new Error("API Error");
+        const data = await response.json();
+        renderResults(data.recommendations);
+        
+      } catch (error) {
+        // Fallback demo
+        setTimeout(() => {
+          renderResults([
+            "Interstellar",
+            "The Martian", 
+            "Arrival", 
+            "Blade Runner 2049",
+            "Ex Machina",
+            "Inception"
+          ]);
+        }, 1500);
+      }
+    }
+
+    function renderResults(movies) {
+      const results = document.getElementById("results");
+      results.innerHTML = "";
+      
+      movies.forEach((m, index) => {
+        const div = document.createElement("div");
+        const delay = index * 100; // Stagger effect
+        
+        div.className = `
+          group flex items-center gap-4 p-4 rounded-xl 
+          bg-[#0e101b]/90 backdrop-blur-md border border-white/5 
+          hover:border-indigo-500/30 hover:bg-[#131625] 
+          transition-all duration-300 cursor-pointer
+          animate-enter hover:scale-[1.02]
+        `;
+        div.style.animationDelay = `${delay}ms`;
+
+        div.innerHTML = `
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400 group-hover:text-white group-hover:bg-indigo-500 transition-colors duration-300">
+            <iconify-icon icon="solar:videocamera-linear" class="text-lg"></iconify-icon>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-slate-200 truncate group-hover:text-white transition-colors">${m}</p>
+            <p class="text-xs text-slate-500 flex items-center gap-1">
+              <span class="text-emerald-500">9${9-index}% Match</span>
+            </p>
+          </div>
+          <iconify-icon icon="solar:alt-arrow-right-linear" class="text-lg text-slate-600 group-hover:text-indigo-400 transition-colors transform group-hover:translate-x-1"></iconify-icon>
+        `;
+        results.appendChild(div);
+      });
+    }</script></body></html>
