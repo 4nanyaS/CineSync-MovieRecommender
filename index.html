@@ -71,19 +71,19 @@
 
   <!-- BACKGROUND & OVERLAYS -->
   <div class="fixed inset-0 z-0 pointer-events-none">
-    <!-- Movie Poster Collage Background - High Visibility -->
+    <!-- Movie Poster Collage Background -->
     <div class="absolute inset-0 bg-[url('https://assets.nflxext.com/ffe/siteui/vlv3/f841d4c7-10e1-40af-bcae-07a3f8dc141a/f6d7434e-d6de-4185-a6d4-c77a2d08737b/US-en-20220502-popsignuptwoweeks-perspective_alpha_website_medium.jpg')] bg-cover bg-center opacity-40"></div>
     
-    <!-- Dark tint to ensure text is readable over posters -->
+    <!-- Dark tint -->
     <div class="absolute inset-0 bg-[#05060f]/50"></div>
 
-    <!-- Top Gradient: Fades from solid background color to transparent -->
+    <!-- Top Gradient -->
     <div class="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[#05060f] via-[#05060f]/80 to-transparent"></div>
     
-    <!-- Bottom Gradient: Fades from transparent to solid background color -->
+    <!-- Bottom Gradient -->
     <div class="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-[#05060f] via-[#05060f] to-transparent"></div>
 
-    <!-- Accent Glows (Subtle) -->
+    <!-- Accent Glows -->
     <div class="absolute -top-20 left-0 right-0 h-[500px] bg-indigo-900/10 blur-[120px] animate-pulse-slow mix-blend-screen"></div>
   </div>
 
@@ -111,7 +111,7 @@
   </nav>
 
   <!-- HERO -->
-  <section class="text-center max-w-5xl z-10 mr-auto ml-auto pt-32 pr-6 pb-40 pl-6 relative">
+  <section class="z-10 text-center max-w-5xl mr-auto ml-auto pt-32 pr-6 pb-40 pl-6 relative">
     
     <!-- Badge -->
     <div class="inline-flex animate-enter text-xs font-medium text-indigo-300 bg-indigo-500/10 border-indigo-500/20 border rounded-full mb-8 pt-1 pr-3 pb-1 pl-3 backdrop-blur-md gap-x-2 gap-y-2 items-center" style="animation-delay: 100ms;">Trusted by 50,000+ movie fans.<span class="relative flex h-2 w-2">
@@ -131,33 +131,28 @@
     <!-- INPUT AREA -->
     <div class="animate-enter mt-12 max-w-2xl mx-auto relative group" style="animation-delay: 400ms;">
       <!-- Glow effect behind input -->
-      <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-violet-500 to-indigo-500 rounded-2xl opacity-20 blur-lg group-hover:opacity-40 transition duration-700 group-focus-within:opacity-50 group-focus-within:blur-xl"></div>
+      <div class="-inset-1 group-hover:opacity-40 transition duration-700 group-focus-within:opacity-50 group-focus-within:blur-xl bg-gradient-to-r from-indigo-500 via-violet-500 to-indigo-500 opacity-20 rounded-2xl absolute blur-lg"></div>
       
-      <div class="relative flex flex-col sm:flex-row items-center bg-[#0a0b14]/90 backdrop-blur-xl border border-white/10 rounded-xl p-2 shadow-2xl transition-all duration-300 focus-within:border-indigo-500/50 focus-within:ring-1 focus-within:ring-indigo-500/50">
+      <!-- Unified Input Container: Flex Row always -->
+      <div class="relative flex items-center bg-[#0a0b14]/90 backdrop-blur-xl border border-white/10 rounded-xl p-2 shadow-2xl transition-all duration-300 focus-within:border-indigo-500/50 focus-within:ring-1 focus-within:ring-indigo-500/50">
         
         <!-- Search Icon -->
-        <div class="pl-4 text-slate-500 flex items-center mb-2 sm:mb-0">
+        <div class="pl-4 text-slate-500 flex items-center flex-shrink-0">
           <iconify-icon icon="solar:magnifer-linear" class="text-xl"></iconify-icon>
         </div>
         
-        <!-- Input -->
-        <input id="movieInput" placeholder="Enter a movie you loved (e.g. Inception)..." class="w-full bg-transparent text-white text-base font-light placeholder-slate-500 px-4 py-3 outline-none" autocomplete="off">
+        <!-- Input (flex-1 ensures it takes available space) -->
+        <input placeholder="Type a movie you loved..." class="placeholder-slate-500 outline-none text-base font-light text-white bg-transparent flex-1 w-full min-w-0 pt-3 pr-3 pb-3 pl-3 truncate" autocomplete="off" id="movieInput">
         
-        <!-- Desktop Button -->
-        <button onclick="getRecommendations()" class="hidden sm:flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-3 rounded-lg font-medium text-sm transition-all duration-200 shadow-lg shadow-indigo-500/20 active:scale-[0.98] hover:shadow-indigo-500/40 mt-2 sm:mt-0">
+        <!-- Generate Button (Visible on all screens) -->
+        <button onclick="getRecommendations()" class="flex-shrink-0 flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-3 rounded-lg font-medium text-sm transition-all duration-200 shadow-lg shadow-indigo-500/20 active:scale-[0.98] hover:shadow-indigo-500/40 whitespace-nowrap">
           <span>Generate</span>
           <iconify-icon icon="solar:magic-stick-3-linear" class="text-lg"></iconify-icon>
         </button>
       </div>
       
-      
-      <!-- Mobile Button FIX: ensure it calls getRecommendations and container shows -->
-      <button onclick="showResultsMobile()" class="sm:hidden mt-4 w-full flex items-center justify-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium text-sm transition shadow-lg shadow-indigo-500/20 active:scale-95">
-        Get Recommendations <iconify-icon icon="solar:magic-stick-3-linear"></iconify-icon>
-      </button>
-
-
-      <div class="mt-5 flex items-center justify-center gap-6 text-xs text-slate-400 font-medium opacity-90 drop-shadow-sm">
+      <!-- Footer Badges -->
+      <div class="mt-5 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-slate-400 font-medium opacity-90 drop-shadow-sm">
         <div class="flex items-center gap-1.5 hover:text-emerald-400 transition-colors cursor-default">
           <iconify-icon icon="solar:check-circle-linear" class="text-emerald-500 text-sm"></iconify-icon> No Login
         </div>
@@ -317,13 +312,6 @@
     }
   }
 
-  // ← ADD THIS FUNCTION FOR MOBILE BUTTON
-  function showResultsMobile() {
-    const resultsContainer = document.getElementById('results-container');
-    resultsContainer.classList.remove('hidden'); // Make sure container is visible
-    getRecommendations(); // Call the main function
-  }
-
   function renderResults(movies) {
     const results = document.getElementById("results");
     results.innerHTML = "";
@@ -355,9 +343,5 @@
       `;
       results.appendChild(div);
     });
-  }</script></body></html>
-
-
-
-
-
+  }</script>
+</body></html>
