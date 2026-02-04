@@ -1,4 +1,4 @@
-ABOUT **CineSync**
+ABOUT CineSync
 
 CineSync uses advanced machine learning to analyze your unique taste profile and instantly curate hidden gems.  
 No complex surveys, ratings, or login required—just type a movie you loved and get a personalized watchlist in seconds.  
@@ -30,3 +30,10 @@ CineSync is built with modern, high-performance tools:
 LIVE DEMO
 
 Try CineSync online without setup: https://4nanyas.github.io/CineSync-MovieRecommender/
+
+https://github.com/user-attachments/assets/a7d7457e-e572-4e3c-be98-135c69265c2a
+
+https://github.com/user-attachments/assets/a2ffb47c-7870-451f-a088-04be4c4e08f2
+
+Uploading CineSync-Screen Recording.mp4…
+
