@@ -147,10 +147,11 @@
       </div>
       
       <!-- Mobile Button FIX: ensure it calls getRecommendations and container shows -->
-      <button onclick="getRecommendations(); document.getElementById('results-container').classList.remove('hidden');" class="sm:hidden mt-4 w-full flex items-center justify-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium text-sm transition shadow-lg shadow-indigo-500/20 active:scale-95">
-        Get Recommendations <iconify-icon icon="solar:magic-stick-3-linear"></iconify-icon>
+      <button onclick="showResultsMobile()" class="sm:hidden mt-4 w-full flex items-center justify-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium text-sm transition shadow-lg shadow-indigo-500/20 active:scale-95">
+      Get Recommendations <iconify-icon icon="solar:magic-stick-3-linear"></iconify-icon>
       </button>
-    
+
+
       <div class="mt-5 flex items-center justify-center gap-6 text-xs text-slate-400 font-medium opacity-90 drop-shadow-sm">
         <div class="flex items-center gap-1.5 hover:text-emerald-400 transition-colors cursor-default">
           <iconify-icon icon="solar:check-circle-linear" class="text-emerald-500 text-sm"></iconify-icon> No Login
@@ -263,86 +264,93 @@
 
   <!-- LOGIC -->
   <script>
-    async function getRecommendations() {
-      const movieInput = document.getElementById("movieInput");
-      const movie = movieInput.value.trim();
-      const resultsContainer = document.getElementById("results-container");
-      const results = document.getElementById("results");
+  async function getRecommendations() {
+    const movieInput = document.getElementById("movieInput");
+    const movie = movieInput.value.trim();
+    const resultsContainer = document.getElementById("results-container");
+    const results = document.getElementById("results");
 
-      if (!movie) {
-        movieInput.classList.add("placeholder-red-400", "animate-pulse");
-        setTimeout(() => movieInput.classList.remove("placeholder-red-400", "animate-pulse"), 1000);
-        return;
-      }
-
-      // Show container and loading state with animation
-      resultsContainer.classList.remove("hidden");
-      results.innerHTML = `
-        <div class="col-span-2 flex flex-col items-center justify-center py-12 text-slate-400 animate-enter">
-          <iconify-icon icon="solar:spinner-linear" class="text-3xl animate-spin text-indigo-500 mb-3"></iconify-icon>
-          <p class="text-sm font-medium">Analyzing "${movie}"...</p>
-        </div>
-      `;
-      
-      // Simulate API call
-      try {
-        const response = await fetch("https://cine-sync-movie-recommender--ananyaashaji.replit.app/recommend", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ movie_name: movie })
-        });
-
-        if (!response.ok) throw new Error("API Error");
-        const data = await response.json();
-        renderResults(data.recommendations);
-        
-      } catch (error) {
-        // Fallback demo
-        setTimeout(() => {
-          renderResults([
-            "Interstellar",
-            "The Martian", 
-            "Arrival", 
-            "Blade Runner 2049",
-            "Ex Machina",
-            "Inception"
-          ]);
-        }, 1500);
-      }
+    if (!movie) {
+      movieInput.classList.add("placeholder-red-400", "animate-pulse");
+      setTimeout(() => movieInput.classList.remove("placeholder-red-400", "animate-pulse"), 1000);
+      return;
     }
 
-    function renderResults(movies) {
-      const results = document.getElementById("results");
-      results.innerHTML = "";
-      
-      movies.forEach((m, index) => {
-        const div = document.createElement("div");
-        const delay = index * 100; // Stagger effect
-        
-        div.className = `
-          group flex items-center gap-4 p-4 rounded-xl 
-          bg-[#0e101b]/90 backdrop-blur-md border border-white/5 
-          hover:border-indigo-500/30 hover:bg-[#131625] 
-          transition-all duration-300 cursor-pointer
-          animate-enter hover:scale-[1.02]
-        `;
-        div.style.animationDelay = `${delay}ms`;
-
-        div.innerHTML = `
-          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400 group-hover:text-white group-hover:bg-indigo-500 transition-colors duration-300">
-            <iconify-icon icon="solar:videocamera-linear" class="text-lg"></iconify-icon>
-          </div>
-          <div class="flex-1 min-w-0">
-            <p class="text-sm font-medium text-slate-200 truncate group-hover:text-white transition-colors">${m}</p>
-            <p class="text-xs text-slate-500 flex items-center gap-1">
-              <span class="text-emerald-500">9${9-index}% Match</span>
-            </p>
-          </div>
-          <iconify-icon icon="solar:alt-arrow-right-linear" class="text-lg text-slate-600 group-hover:text-indigo-400 transition-colors transform group-hover:translate-x-1"></iconify-icon>
-        `;
-        results.appendChild(div);
+    // Show container and loading state with animation
+    resultsContainer.classList.remove("hidden");
+    results.innerHTML = `
+      <div class="col-span-2 flex flex-col items-center justify-center py-12 text-slate-400 animate-enter">
+        <iconify-icon icon="solar:spinner-linear" class="text-3xl animate-spin text-indigo-500 mb-3"></iconify-icon>
+        <p class="text-sm font-medium">Analyzing "${movie}"...</p>
+      </div>
+    `;
+    
+    // Simulate API call
+    try {
+      const response = await fetch("https://cine-sync-movie-recommender--ananyaashaji.replit.app/recommend", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ movie_name: movie })
       });
 
-    }</script></body></html>
+      if (!response.ok) throw new Error("API Error");
+      const data = await response.json();
+      renderResults(data.recommendations);
+      
+    } catch (error) {
+      // Fallback demo
+      setTimeout(() => {
+        renderResults([
+          "Interstellar",
+          "The Martian", 
+          "Arrival", 
+          "Blade Runner 2049",
+          "Ex Machina",
+          "Inception"
+        ]);
+      }, 1500);
+    }
+  }
+
+  // ← ADD THIS FUNCTION FOR MOBILE BUTTON
+  function showResultsMobile() {
+    const resultsContainer = document.getElementById('results-container');
+    resultsContainer.classList.remove('hidden'); // Make sure container is visible
+    getRecommendations(); // Call the main function
+  }
+
+  function renderResults(movies) {
+    const results = document.getElementById("results");
+    results.innerHTML = "";
+    
+    movies.forEach((m, index) => {
+      const div = document.createElement("div");
+      const delay = index * 100; // Stagger effect
+      
+      div.className = `
+        group flex items-center gap-4 p-4 rounded-xl 
+        bg-[#0e101b]/90 backdrop-blur-md border border-white/5 
+        hover:border-indigo-500/30 hover:bg-[#131625] 
+        transition-all duration-300 cursor-pointer
+        animate-enter hover:scale-[1.02]
+      `;
+      div.style.animationDelay = `${delay}ms`;
+
+      div.innerHTML = `
+        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400 group-hover:text-white group-hover:bg-indigo-500 transition-colors duration-300">
+          <iconify-icon icon="solar:videocamera-linear" class="text-lg"></iconify-icon>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-slate-200 truncate group-hover:text-white transition-colors">${m}</p>
+          <p class="text-xs text-slate-500 flex items-center gap-1">
+            <span class="text-emerald-500">9${9-index}% Match</span>
+          </p>
+        </div>
+        <iconify-icon icon="solar:alt-arrow-right-linear" class="text-lg text-slate-600 group-hover:text-indigo-400 transition-colors transform group-hover:translate-x-1"></iconify-icon>
+      `;
+      results.appendChild(div);
+    });
+  }</script></body></html>
+
 
 
