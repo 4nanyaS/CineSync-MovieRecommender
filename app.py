@@ -1,12 +1,19 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory  # <-- Added send_from_directory
 from flask_cors import CORS
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import ast
+import os  # <-- Added for Render deployment
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='.')  # <-- tell Flask current folder has static files
 CORS(app)  # allow frontend to talk to backend
+
+# ---------- FRONTEND ROUTE ----------
+@app.route('/')
+def index():
+    # Serve index.html from current folder
+    return send_from_directory('.', 'index.html')
 
 # ---------- LOAD DATA ----------
 df = pd.read_csv("tmdb_5000_movies.csv")
@@ -30,7 +37,7 @@ def recommend_movie(title):
     title = title.lower()
 
     if title not in df['title'].str.lower().values:
-        return ["Movie not found "]
+        return ["Movie not found"]
 
     idx = df[df['title'].str.lower() == title].index[0]
 
@@ -51,5 +58,8 @@ def recommend():
         "recommendations": recommendations
     })
 
+# ---------- RUN ----------
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Use host='0.0.0.0' for Render deployment
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
