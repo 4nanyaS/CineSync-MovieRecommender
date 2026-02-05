@@ -1,18 +1,17 @@
-from flask import Flask, request, jsonify, send_from_directory  # <-- Added send_from_directory
+from flask import Flask, request, jsonify, send_from_directory  
 from flask_cors import CORS
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import ast
-import os  # <-- Added for Render deployment
+import os  
 
-app = Flask(__name__, static_folder='.')  # <-- tell Flask current folder has static files
-CORS(app)  # allow frontend to talk to backend
+app = Flask(__name__, static_folder='.')  
+CORS(app)  
 
 # ---------- FRONTEND ROUTE ----------
 @app.route('/')
 def index():
-    # Serve index.html from current folder
     return send_from_directory('.', 'index.html')
 
 # ---------- LOAD DATA ----------
@@ -63,3 +62,4 @@ if __name__ == "__main__":
     # Use host='0.0.0.0' for Render deployment
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
+
