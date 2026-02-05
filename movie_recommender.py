@@ -4,9 +4,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import ast
 
 df = pd.read_csv("tmdb_5000_movies.csv")
-
 df = df[['title', 'overview', 'genres']]
-
 df['overview'] = df['overview'].fillna('')
 
 def clean_genres(genres_str):
@@ -15,9 +13,7 @@ def clean_genres(genres_str):
     return ' '.join(genre_names)
 
 df['genres'] = df['genres'].apply(clean_genres)
-
 df['content'] = df['overview'] + ' ' + df['genres']
-
 print(df[['title', 'content']].head())
 
 # Create TF-IDF matrix
@@ -39,6 +35,6 @@ def recommend_movie(title, cosine_sim=cosine_sim):
     sim_scores = sim_scores[1:6]
 
     movie_indices = [i[0] for i in sim_scores]
-
     return df['title'].iloc[movie_indices]
+
 
